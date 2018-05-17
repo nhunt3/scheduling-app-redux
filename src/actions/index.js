@@ -9,12 +9,11 @@ export function fetchTimes() {
     };
 }
 
-export function editData(time, metadata) {
-    axios.post('/editData', {"time": time});
+export function editData(data) {
+    const response = axios.post('/editData', data);
 
     return{
         type: 'EDIT_DATA',
-        time: time,
-        metadata: metadata
+        payload: response
     }
 }

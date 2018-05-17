@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { editData } from "./actions/index";
+import axios from "axios/index";
+import { editData } from './actions/index';
 
 class EditModal extends Component {
     constructor(props) {
@@ -33,9 +34,19 @@ class EditModal extends Component {
     }
 
     editData() {
-        console.log(this.props.selectedTime);
-        this.props.editData(this.props.selectedTime, this.state);
+        const metadata = this.state;
+
+        this.props.editData({"time": this.props.selectedTime, "metadata": metadata});
         this.props.displayModal(false, null);
+
+        // const that = this;
+        // axios.post('/editData', {"time": this.props.selectedTime, "metadata": metadata}).then(function() {
+        //     that.props.fetchTimes();
+        //     that.props.displayModal(false, null);
+        // })
+        // .catch(function (err) {
+        //     console.log('Error Getting response from editData API', err);
+        // });
     }
 
     render() {
@@ -50,8 +61,8 @@ class EditModal extends Component {
                 </Modal.Header>
 
                 <Modal.Body>
-                    <input type="text" name="name" required placeholder="Your name" className="textBoxes" onChange={this.handleChange.bind(this)} value={this.state.name}/>
-                    <input type="text" name="phone" required placeholder="Your phone number" className="textBoxes" onChange={this.handleChange.bind(this)} value={this.state.phone}/>
+                    <input type="text" name="name" placeholder="Your name" className="textBoxes" onChange={this.handleChange.bind(this)} value={this.state.name}/>
+                    <input type="text" name="phone" placeholder="Your phone number" className="textBoxes" onChange={this.handleChange.bind(this)} value={this.state.phone}/>
                 </Modal.Body>
 
                 <Modal.Footer>
@@ -66,5 +77,4 @@ function mapStateToProps(state) {
     return {times: state.times};
 }
 
-// export default EditModal;
 export default connect(mapStateToProps, {editData})(EditModal);

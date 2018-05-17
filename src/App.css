@@ -4,6 +4,8 @@
 
 ul {
   list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
 
 .timeBtns {
@@ -32,9 +34,10 @@ ul {
 
 .App-header {
   background-color: #222;
-  height: 150px;
+  height: 80px;
   padding: 20px;
   color: white;
+  marign: 0 0 20px 0;
 }
 
 .App-title {

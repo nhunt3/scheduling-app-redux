@@ -18,7 +18,6 @@ MongoClient.connect(url, {useNewUrlParser:true}, function(err, client) {
 app.get('/getTimes', function (req, res) {
     db.collection('times').find({}).toArray(function(err, data) {
         if (err) {console.log('Error finding collection!', err);}
-
         res.json(data);
     });
 });
@@ -27,11 +26,18 @@ app.post('/editData', function (req, res) {
     const query = {time: req.body.time};
     const newValues =
         {$set: {
-            status: "booked"
+            status: "booked",
+            name: req.body.metadata.name,
+            phone: req.body.metadata.phone
         }};
 
     db.collection('times').updateOne(query, newValues, function(err, resp) {
         if (err) {console.log('Error updating record!', err);}
+
+        db.collection('times').find(query).toArray(function(err, data) {
+            if (err) {console.log('Error finding collection!', err);}
+            res.json(data[0]);
+        });
     });
 });
 

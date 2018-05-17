@@ -2,7 +2,7 @@ Scheduling App
 
 This app persists data to mongo.
 
-Tech used: react, redux, node.js, mongodb
+Tech used: React, Redux, Node.js, mongoDB
 
 To get this to run, do the following:
 1. open terminal
