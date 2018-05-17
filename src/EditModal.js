@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Modal } from 'react-bootstrap'
+import { Button, Modal } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { editData } from "./actions/index";
 
 class EditModal extends Component {
     constructor(props) {
@@ -8,7 +10,7 @@ class EditModal extends Component {
         this.state = {
             name: '',
             phone: ''
-        }
+        };
     }
 
     handleChange(e) {
@@ -18,37 +20,51 @@ class EditModal extends Component {
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.selectedMetadata !== undefined) {
+        if (nextProps.times !== null && nextProps.selectedTime !== null) {
+            const time = nextProps.times[nextProps.selectedTime];
+
             return {
-                name: nextProps.selectedMetadata.name, 
-                phone: nextProps.selectedMetadata.phone
+                name: time.name,
+                phone: time.phone
             };
         }
 
         return null;
     }
 
+    editData() {
+        console.log(this.props.selectedTime);
+        this.props.editData(this.props.selectedTime, this.state);
+        this.props.displayModal(false, null);
+    }
+
     render() {
-        const title = this.props.selectedMetadata !== undefined && this.props.selectedMetadata.status === 'available' ? 'Make' : 'Edit';
-        const save =  this.props.selectedMetadata !== undefined && this.props.selectedMetadata.status === 'available' ? 'Schedule' : 'Update';
+        const available = this.props.times !== null && this.props.selectedTime !== null && this.props.times[this.props.selectedTime].status === 'available';
+        const title = available ? 'Make' : 'Edit';
+        const save = available ? 'Schedule' : 'Update';
 
         return (
             <Modal show={this.props.showModal} onHide={() => this.props.displayModal(false, null)} dialogClassName="edit-modal">
                 <Modal.Header closeButton>
                     <Modal.Title>{title} An Appointment</Modal.Title>
                 </Modal.Header>
-            
+
                 <Modal.Body>
-                    <input type="text" name="name" required placeholder="Your name" className="textBoxes" onChange={this.handleChange.bind(this)} value={this.state.name} />
-                    <input type="text" name="phone" required placeholder="Your phone number" className="textBoxes" onChange={this.handleChange.bind(this)} value={this.state.phone} />
+                    <input type="text" name="name" required placeholder="Your name" className="textBoxes" onChange={this.handleChange.bind(this)} value={this.state.name}/>
+                    <input type="text" name="phone" required placeholder="Your phone number" className="textBoxes" onChange={this.handleChange.bind(this)} value={this.state.phone}/>
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button bsStyle="primary" onClick={() => this.props.editAppt(this.props.selectedTime, 'booked', this.state)}>{save} Appointment</Button>
+                    <Button bsStyle="primary" onClick={this.editData.bind(this)}>{save} Appointment</Button>
                 </Modal.Footer>
           </Modal>
         );
     }
 }
 
-export default EditModal;
+function mapStateToProps(state) {
+    return {times: state.times};
+}
+
+// export default EditModal;
+export default connect(mapStateToProps, {editData})(EditModal);
