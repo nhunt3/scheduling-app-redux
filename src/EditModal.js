@@ -33,20 +33,11 @@ class EditModal extends Component {
         return null;
     }
 
-    editData() {
+    editData(event) {
+        event.preventDefault();
         const metadata = this.state;
-
         this.props.editData({"time": this.props.selectedTime, "metadata": metadata});
         this.props.displayModal(false, null);
-
-        // const that = this;
-        // axios.post('/editData', {"time": this.props.selectedTime, "metadata": metadata}).then(function() {
-        //     that.props.fetchTimes();
-        //     that.props.displayModal(false, null);
-        // })
-        // .catch(function (err) {
-        //     console.log('Error Getting response from editData API', err);
-        // });
     }
 
     render() {
@@ -60,14 +51,16 @@ class EditModal extends Component {
                     <Modal.Title>{title} An Appointment</Modal.Title>
                 </Modal.Header>
 
-                <Modal.Body>
-                    <input type="text" name="name" placeholder="Your name" className="textBoxes" onChange={this.handleChange.bind(this)} value={this.state.name}/>
-                    <input type="text" name="phone" placeholder="Your phone number" className="textBoxes" onChange={this.handleChange.bind(this)} value={this.state.phone}/>
-                </Modal.Body>
+                <form onSubmit={this.editData.bind(this)}>
+                    <Modal.Body>
+                        <input type="text" name="name" required placeholder="Your name" className="textBoxes" onChange={this.handleChange.bind(this)} value={this.state.name}/>
+                        <input type="text" name="phone" required placeholder="Your phone number" className="textBoxes" onChange={this.handleChange.bind(this)} value={this.state.phone}/>
+                    </Modal.Body>
 
-                <Modal.Footer>
-                    <Button bsStyle="primary" onClick={this.editData.bind(this)}>{save} Appointment</Button>
-                </Modal.Footer>
+                    <Modal.Footer>
+                        <Button type="submit" bsStyle="primary">{save} Appointment</Button>
+                    </Modal.Footer>
+                </form>
           </Modal>
         );
     }
